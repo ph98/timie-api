@@ -8,5 +8,6 @@ async function bootstrap() {
     origin: 'http://localhost:3000',
   });
   await app.listen(5000);
+  console.log('started!');
 }
 bootstrap();
