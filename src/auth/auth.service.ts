@@ -43,4 +43,10 @@ export class AuthService {
 
     // return {};
   }
+
+  async getUser({ email }) {
+    const user = await this.usersService.findOne({ email });
+
+    return user;
+  }
 }
