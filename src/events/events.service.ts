@@ -20,8 +20,10 @@ export class EventsService {
   }
 
   findAll(id: string) {
-    console.log('id', id);
-    return this.eventModel.find({ creator: id }).exec();
+    return this.eventModel
+      .find({ creator: id })
+      .sort({ created_at: 'desc' })
+      .exec();
   }
 
   findOne(id: number) {
