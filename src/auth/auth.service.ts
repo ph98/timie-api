@@ -26,14 +26,15 @@ export class AuthService {
 
     if (!user) {
       const user = await this.usersService.create({ email, name, image });
-      const payload = { email: user.email };
+      const payload = user;
 
+      console.log('user', user);
       return {
         ...user,
         access_token: await this.jwtService.signAsync(payload),
       };
     } else {
-      const payload = { email: user.email };
+      const payload = user;
 
       return {
         ...user,
