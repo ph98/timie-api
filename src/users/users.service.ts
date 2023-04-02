@@ -6,6 +6,9 @@ import { User, UserDocument } from '../schema/user.schema';
 @Injectable()
 export class UsersService {
   constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
+  async findById(id: string): Promise<User | undefined> {
+    return await this.userModel.findById(id).lean().exec();
+  }
   async findOne({ email }: { email: string }): Promise<User | undefined> {
     return await this.userModel.findOne({ email }).lean();
   }
