@@ -25,27 +25,26 @@ export class EventsController {
 
   @Post()
   create(@Body() createEventDto: CreateEventDto, @Request() req) {
-    return this.eventsService.create(createEventDto, req.user._id);
+    return this.eventsService.create(createEventDto, req.user);
   }
 
   @Get()
   findAll(@Request() req) {
-    return this.eventsService.findAll(req.user._id);
+    return this.eventsService.findAll(req.user);
   }
 
   @Get(':id')
   async findOne(@Param('id') id: string) {
     const event = await this.eventsService.findOne(id);
 
+    const temp = await this.eventsService.getVotes(id);
+    console.log('temp', temp);
     return {
       event: {
         ...event,
-        creator: await this.userService.findById(event.creator),
+        creator: await this.userService.findOne(event.creator),
       },
-      votes: (await this.eventsService.getVotes(id)).map((item) => ({
-        ...item,
-        // by:  this.userService.findById(item.by),
-      })),
+      votes: await this.eventsService.getVotes(id),
     };
   }
 
@@ -60,10 +59,10 @@ export class EventsController {
   }
 
   @Post(':id')
-  createVote(@Param('id') id: string, @Request() req, @Body() body: any) {
+  async createVote(@Param('id') id: string, @Request() req, @Body() body: any) {
     return this.eventsService.addVote({
       event: id,
-      by: req.user._id,
+      by: req.user,
       created_at: new Date(),
       votes: body.votes,
     });

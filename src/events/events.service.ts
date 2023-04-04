@@ -6,25 +6,27 @@ import { Vote, VoteDocument } from 'src/schema/vote.schema';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
 import { CreateVoteDto } from './dto/create-vote.dto';
+import { User, UserDocument } from 'src/schema/user.schema';
 
 @Injectable()
 export class EventsService {
   constructor(
     @InjectModel(Event.name) private eventModel: Model<EventDocument>,
     @InjectModel(Vote.name) private voteModel: Model<VoteDocument>,
+    @InjectModel(User.name) private userModel: Model<UserDocument>,
   ) {}
 
-  create(createEventDto: CreateEventDto, id: string) {
+  create(createEventDto: CreateEventDto, user: User) {
     return this.eventModel.create({
       title: createEventDto.title,
-      creator: id,
+      creator: user,
       created_at: new Date(),
     });
   }
 
-  findAll(id: string) {
+  findAll(user: string) {
     return this.eventModel
-      .find({ creator: id })
+      .find({ creator: user })
       .sort({ created_at: 'desc' })
       .exec();
   }
@@ -48,7 +50,7 @@ export class EventsService {
         event: createVoteDto.event,
       })
       .exec();
-    console.log('first', prevVote);
+
     if (prevVote) {
       return {
         data: await this.voteModel
@@ -63,16 +65,26 @@ export class EventsService {
     return {
       data: await this.voteModel.create({
         ...createVoteDto,
+        event: createVoteDto.event,
       }),
       message: 'Your vote has been submitted!',
     };
   }
 
-  getVotes(id: string) {
-    return this.voteModel
+  async getVotes(id: string) {
+    const votes = await this.voteModel
       .find({ event: id })
       .sort({ created_at: 'desc' })
       .lean()
       .exec();
+
+    const result = [];
+
+    for (const item of votes) {
+      const user = await this.userModel.findById(item.by).lean().exec();
+      result.push({ ...item, by: user });
+    }
+
+    return result;
   }
 }

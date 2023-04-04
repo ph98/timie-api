@@ -9,8 +9,15 @@ export class UsersService {
   async findById(id: string): Promise<User | undefined> {
     return await this.userModel.findById(id).lean().exec();
   }
-  async findOne({ email }: { email: string }): Promise<User | undefined> {
+  async findOneByEmail({
+    email,
+  }: {
+    email: string;
+  }): Promise<User | undefined> {
     return await this.userModel.findOne({ email }).lean();
+  }
+  async findOne(id: string): Promise<User | undefined> {
+    return await this.userModel.findById(id).lean();
   }
   async create({ email, name, image }): Promise<User | undefined> {
     const newUser = new this.userModel({ email, name, image });

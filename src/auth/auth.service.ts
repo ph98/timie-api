@@ -22,7 +22,7 @@ export class AuthService {
     });
     const { email, name, picture: image } = ticket.getPayload();
 
-    const user = await this.usersService.findOne({ email });
+    const user = await this.usersService.findOneByEmail({ email });
 
     if (!user) {
       const user = await this.usersService.create({ email, name, image });
@@ -46,8 +46,6 @@ export class AuthService {
   }
 
   async getUser({ email }) {
-    const user = await this.usersService.findOne({ email });
-
-    return user;
+    return await this.usersService.findOneByEmail({ email });
   }
 }

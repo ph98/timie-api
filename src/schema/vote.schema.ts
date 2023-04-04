@@ -5,17 +5,17 @@ export type VoteDocument = Vote & Document;
 
 @Schema()
 export class Vote {
-  @Prop()
+  @Prop({ required: true })
   by: string;
 
-  @Prop()
+  @Prop({ required: true })
   event: string;
 
-  @Prop()
+  @Prop({ required: true })
   votes: [any];
 
-  @Prop()
-  created_at: string;
+  @Prop({ required: true })
+  created_at: Date;
 }
 
 export const VoteSchema = SchemaFactory.createForClass(Vote);
