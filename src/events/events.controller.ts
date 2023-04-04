@@ -36,9 +36,6 @@ export class EventsController {
   @Get(':id')
   async findOne(@Param('id') id: string) {
     const event = await this.eventsService.findOne(id);
-
-    const temp = await this.eventsService.getVotes(id);
-    console.log('temp', temp);
     return {
       event: {
         ...event,

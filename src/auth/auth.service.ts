@@ -28,7 +28,6 @@ export class AuthService {
       const user = await this.usersService.create({ email, name, image });
       const payload = user;
 
-      console.log('user', user);
       return {
         ...user,
         access_token: await this.jwtService.signAsync(payload),
