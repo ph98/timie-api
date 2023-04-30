@@ -58,7 +58,7 @@ export class EventsController {
   @Post(':id')
   async createVote(@Param('id') id: string, @Request() req, @Body() body: any) {
     return this.eventsService.addVote({
-      event: id,
+      event: ' ' + id,
       by: req.user,
       created_at: new Date(),
       votes: body.votes,
