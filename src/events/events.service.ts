@@ -21,6 +21,8 @@ export class EventsService {
       title: createEventDto.title,
       creator: user,
       created_at: new Date(),
+      start: createEventDto.start,
+      end: createEventDto.end,
     });
   }
 
